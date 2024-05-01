@@ -1,4 +1,9 @@
+import 'dart:ui';
+import 'dart:math' as math;
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:whutsapp/components/whutsapp_bubble.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,119 +12,337 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xff52a8fd),
+          brightness: Brightness.dark,
+        ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const WhutsApp(
+        contact: 'Professor D',
+        avatarPath: 'assets/images/nursing-D.jpeg',
+      ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class WhutsApp extends StatelessWidget {
+  const WhutsApp(
+      {super.key,
+      required this.contact,
+      required this.avatarPath,
+      this.byline = 'tap here for contact info'});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  final String contact;
+  final String avatarPath;
+  final String byline;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: PreferredSize(
+          preferredSize: const Size(
+            double.infinity,
+            64.0,
+          ),
+          child: ClipRRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        CupertinoIcons.chevron_back,
+                        color: Color(0xff52a8fd),
+                        size: 32,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 220,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            foregroundImage: AssetImage(avatarPath),
+                            backgroundColor: Colors.white,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                contact,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                byline,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xff8a9397),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        CupertinoIcons.videocam,
+                        color: Color(0xff52a8fd),
+                        size: 34,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        CupertinoIcons.phone,
+                        color: Color(0xff52a8fd),
+                        size: 28,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+          ),
+        ),
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/background.png'),
+              fit: BoxFit.cover,
+              opacity: 0.6,
+              colorFilter: ColorFilter.mode(Colors.black, BlendMode.screen),
+            ),
+          ),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: const SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 90,
+                  ),
+                  WhutsAppBubble(
+                    text:
+                        'The nurse is caring for a patient who recently suffered a stroke. The physician orders for the patient to be advanced to a clear liquid diet from NPO. Before allowing the patient to drink, which of the following is the most important for the nurse to confirm?',
+                    timestamp: '9:35 AM',
+                    color: Color(0xff005046),
+                    tail: false,
+                    textStyle: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  WhutsAppBubble(
+                    text:
+                        'The choices are the patient\'s favourite drinks, if the patient needs thickened liquids, if the patient is urinating, and if the patient has vomited in 24 hours.',
+                    timestamp: '9:36 AM',
+                    color: Color(0xff005046),
+                    tail: true,
+                    textStyle: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  WhutsAppBubble(
+                    text:
+                        'Let\'s focus on the patient\'s safety and well-being!',
+                    timestamp: '9:41 AM',
+                    color: Color(0xff363638),
+                    tail: false,
+                    textStyle: TextStyle(color: Colors.white, fontSize: 16),
+                    isSender: false,
+                  ),
+                  WhutsAppBubble(
+                    text:
+                        'When a patient is advanced to a clear liquid diet from NPO (nothing by mouth), it means they can start consuming clear liquids like water, clear broths, and electrolyte-rich drinks. Before allowing the patient to drink, the most important thing for the nurse to confirm is: D) If the patient has vomited in 24 hours.',
+                    timestamp: '9:41 AM',
+                    color: Color(0xff363638),
+                    tail: false,
+                    textStyle: TextStyle(color: Colors.white, fontSize: 16),
+                    isSender: false,
+                  ),
+                  WhutsAppBubble(
+                    text:
+                        'The nurse needs to ensure the patient has not vomited in the past 24 hours to minimize the risk of complications and ensure safe reintroduction to oral fluids.',
+                    timestamp: '9:41 AM',
+                    color: Color(0xff363638),
+                    tail: true,
+                    textStyle: TextStyle(color: Colors.white, fontSize: 16),
+                    isSender: false,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        bottomNavigationBar: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.add_outlined,
+                size: 30,
+                color: Color(0xff52a8fd),
+              ),
+            ),
+            SizedBox(
+              width: 231,
+              height: 35,
+              child: TextField(
+                textAlignVertical: TextAlignVertical.center,
+                showCursor: false,
+                decoration: InputDecoration(
+                  enabled: true,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: const BorderSide(
+                      color: Color(0xff39393a),
+                      width: 1,
+                    ),
+                  ),
+                  fillColor: const Color(0xff2c2c2e),
+                  suffixIcon: IconButton(
+                    onPressed: () {},
+                    icon: Transform.scale(
+                      scaleX: 0.75,
+                      child: Transform.rotate(
+                        angle: 90 * math.pi / 180,
+                        child: const Icon(
+                          CupertinoIcons.doc,
+                          color: Color(0xff52a8fd),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                CupertinoIcons.camera,
+                size: 24,
+                color: Color(0xff52a8fd),
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                CupertinoIcons.mic,
+                size: 28,
+                color: Color(0xff52a8fd),
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
+class WhutsappChatBubble extends StatelessWidget {
+  const WhutsappChatBubble({
+    super.key,
+    this.author = 'self',
+    required this.bubbleText,
+    required this.timestamp,
+  });
+
+  final String author;
+  final String bubbleText;
+  final String timestamp;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: author == 'self'
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.start,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              decoration: BoxDecoration(
+                color: author == 'self'
+                    ? const Color(0xff005046)
+                    : const Color(0xff363638),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(16.0),
+                ),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                child: Column(
+                  children: [
+                    Text(
+                      bubbleText,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontFamily: 'SF Pro',
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          timestamp,
+                          style: const TextStyle(
+                            color: Color(0xff9a9aa1),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// WhutsAppBubble(
+//   text:
+//       'Street lights indicate a speed limit of 30 miles an hour, but this is only for the theory test.',
+//   timestamp: '9:40 AM',
+//   color: Color(0xff363638),
+//   tail: false,
+//   textStyle: TextStyle(color: Colors.white, fontSize: 16),
+//   isSender: false,
+// ),
+// WhutsAppBubble(
+//   text:
+//       'In real life, be wary of speed limit signs because some boroughs changed the speed limit to just 20 miles an hour.',
+//   timestamp: '9:41 AM',
+//   color: Color(0xff363638),
+//   tail: true,
+//   textStyle: TextStyle(color: Colors.white, fontSize: 16),
+//   isSender: false,
+// ),
